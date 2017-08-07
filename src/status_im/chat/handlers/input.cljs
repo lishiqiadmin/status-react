@@ -114,9 +114,9 @@
                                          (= type :grant-permissions))))
           commands        (suggestions/get-command-suggestions db chat-text)
           global-commands (suggestions/get-global-command-suggestions db chat-text)
-          all-commands (->> (into global-commands commands)
-                            (remove (fn [[k {:keys [hidden?]}]] hidden?))
-                            (into {}))
+          all-commands    (->> (into global-commands commands)
+                               (remove (fn [[k {:keys [hidden?]}]] hidden?))
+                               (into {}))
           {:keys [dapp?]} (get-in db [:contacts/contacts chat-id])]
       (when dapp?
         (if (str/blank? chat-text)
@@ -153,7 +153,7 @@
                                              :to   to}
                                             (input-model/command-dependent-context-params current-chat-id command))}]
             (status/call-jail
-              {:jail-id  (or bot owner-id current-chat-id)
+              {:jail-id  (or owner-id current-chat-id)
                :path     path
                :params   params
                :callback #(dispatch [:received-bot-response

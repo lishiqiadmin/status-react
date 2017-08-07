@@ -15,10 +15,10 @@
   (re-frame.core/dispatch [:load-commands!]))
 
 (figwheel/watch-and-reload
-  :websocket-url "ws://10.0.3.2:3449/figwheel-ws"
+  :websocket-url "ws://localhost:3449/figwheel-ws"
   :heads-up-display false
   :jsload-callback callback)
 
-(rr/enable-re-frisk-remote! {:host "10.0.3.2:4567" :pre-send (fn [db] (update db :chats #(into {} %)))})
+(rr/enable-re-frisk-remote! {:host "localhost:4567" :pre-send (fn [db] (update db :chats #(into {} %)))})
 
 (core/init)

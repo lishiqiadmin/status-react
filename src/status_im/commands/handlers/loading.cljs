@@ -50,13 +50,10 @@
                bot-url
                dapp?]} :contact
        :as             params}]]
-  (if bot-url
+  (when bot-url
     (if-let [resource (js-res/get-resource bot-url)]
       (dispatch [::validate-hash params resource])
-      (http-get-commands params bot-url))
-    (when-not dapp?
-      ;; TODO: this part should be removed in the future
-      (dispatch [::validate-hash params js-res/wallet-js]))))
+      (http-get-commands params bot-url))))
 
 (defn dispatch-loaded!
   [db [{{:keys [whisper-identity]} :contact
@@ -106,14 +103,13 @@
 
 (defn filter-commands [account {:keys [contacts chat-id] :as chat} commands]
   (->> commands
-       (remove (fn [[_ {:keys [registered-only name]}]]
+       (remove (fn [[_ {:keys [scope name :as c]}]]
                  (and (not (:address account))
                       (not= name "global")
-                      registered-only)))
-       ;; TODO: this part should be removed because it's much better to provide the ability to do this in the API
-       (map (fn [[k {:keys [name] :as v}]]
-              [k (assoc v :hidden? (and (some #{name} ["send" "request"])
-                                        (= chat-id wallet-chat-id)))]))
+                      (:registered-only? scope))))
+       ;; TODO(alwx): SCOOOOPE
+       (remove (fn [[_ {:keys [scope]}]]
+                 ))
        (remove (fn [[k _]]
                  (and (= (count contacts) 1)
                       (not= console-chat-id (get (first contacts) :identity))
@@ -139,8 +135,15 @@
         chat             (get chats id)
         commands'        (filter-commands account chat commands)
         responses'       (filter-commands account chat responses)
-        global-command   (:global commands')
-        commands''       (each-merge (apply dissoc commands' [:init :global])
+        global-commands  (->> commands'
+                              (filter (fn [[_ {:keys [scope]}]]
+                                        (:global? scope)))
+                              (map (fn [[k v]]
+                                     [k (assoc v :bot (name k)
+                                                 :owner-id id
+                                                 :type :command)]))
+                              (into {}))
+        commands''       (each-merge (apply dissoc commands' (into [:init] (keys global-commands)))
                                      {:type     :command
                                       :owner-id id})
         mailman-commands (get-mailmans-commands db)]
@@ -154,10 +157,8 @@
                                                           :owner-id id})
                        :subscriptions subscriptions)
 
-            global-command
-            (update :global-commands assoc (keyword id)
-                    (assoc global-command :bot id
-                                          :type :command))
+            true
+            (update :global-commands merge global-commands)
 
             (= id bots-constants/mailman-bot)
             (update :contacts/contacts (fn [contacts]
