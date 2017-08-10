@@ -1,5 +1,10 @@
 (ns status-im.utils.gfycat.adjectives)
 
+;Names are only deterministic as long as word lists do not change!
+;If you change this list, please also update the tests at:
+;
+; - cljs/status_im/test/utils/gfycat/core.cljs
+
 
 (def data
   ["able"
