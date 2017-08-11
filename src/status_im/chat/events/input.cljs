@@ -54,7 +54,7 @@
    (.setNativeProps ref (clj->js props))))
 
 (reg-fx
- :chart-events/call-jail-function
+ :chat-fx/call-jail-function
  (fn [{:keys [chat-id function callback-events-creator] :as opts}]
    (let [path   [:functions function]
          params (select-keys opts [:parameters :context])]
@@ -224,15 +224,15 @@
                                           :from current-account-id
                                           :to   to}
                                          (input-model/command-dependent-context-params current-chat-id command))}]
-         {:chat-events/call-jail {:call-params {:jail-id (or bot owner-id current-chat-id)
-                                                :path    path
-                                                :params  params}
-                                  :callback-events-creator (fn [jail-response]
-                                                             [[:received-bot-response
-                                                               {:chat-id         current-chat-id
-                                                                :command         command
-                                                                :parameter-index parameter-index}
-                                                               jail-response]])}})))))
+         {:chat-fx/call-jail {:jail-id (or bot owner-id current-chat-id)
+                              :path    path
+                              :params  params
+                              :callback-events-creator (fn [jail-response]
+                                                         [[:received-bot-response
+                                                           {:chat-id         current-chat-id
+                                                            :command         command
+                                                            :parameter-index parameter-index}
+                                                           jail-response]])}})))))
 
 (register-handler-fx
  ::send-message
@@ -387,11 +387,11 @@
  [trim-v]
  (fn [{{:keys [current-account-id] :as db} :db} [chat-id text]]
    (let [data (get-in db [:local-storage chat-id])]
-     {:chat-events/call-jail-function {:chat-id    chat-id
-                                       :function   :on-message-input-change
-                                       :parameters {:message text}
-                                       :context    {:data data
-                                                    :from current-account-id}}})))
+     {:chat-fx/call-jail-function {:chat-id    chat-id
+                                   :function   :on-message-input-change
+                                   :parameters {:message text}
+                                   :context    {:data data
+                                                :from current-account-id}}})))
 
 (register-handler-db
  :clear-seq-arguments

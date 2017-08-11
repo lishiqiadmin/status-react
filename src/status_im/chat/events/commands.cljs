@@ -39,10 +39,11 @@
 
 
 (reg-fx
- :chat-events/call-jail
- (fn [{:keys [call-params callback-events-creator]}]
+ :chat-fx/call-jail
+ (fn [{:keys [callback-events-creator] :as opts}]
    (status/call-jail
-    (-> jail-call-params
+    (-> opts
+        (dissoc :callback-events-creator)
         (assoc :callback
                (fn [jail-response]
                  (doseq [event (callback-events-creator jail-response)]
@@ -84,12 +85,12 @@
              to       (get-in contacts [chat-id :address])
              params   {:parameters params
                        :context (generate-context db chat-id to)}]
-         {:chat-events/call-jail {:call-params {:jail-id jail-id
-                                                :path path
-                                                :params params}
-                                  :callback-events-creator (fn [jail-response]
-                                                             [[::jail-command-data-response
-                                                               jail-response message data-type]])}})
+         {:chat-fx/call-jail {:jail-id jail-id
+                              :path path
+                              :params params
+                              :callback-events-creator (fn [jail-response]
+                                                         [[::jail-command-data-response
+                                                           jail-response message data-type]])}})
        {:dispatch-n [[:add-commands-loading-callback jail-id
                       #(dispatch [:request-command-data message data-type])]
                      [:load-commands! jail-id]]}))))
