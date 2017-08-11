@@ -2,14 +2,14 @@
   (:require [cljs.reader :as reader]
             [clojure.string :as str]
             [re-frame.core :refer [reg-fx reg-cofx inject-cofx dispatch trim-v]]
+            [taoensso.timbre :as log]
             [status-im.data-store.messages :as msg-store]
             [status-im.utils.handlers :refer [register-handler-fx]]
             [status-im.components.status :as status]
             [status-im.chat.constants :as const]
             [status-im.commands.utils :as commands-utils]
             [status-im.i18n :as i18n]
-            [status-im.utils.platform :as platform]
-            [taoensso.timbre :as log]))
+            [status-im.utils.platform :as platform]))
 
 ;;;; Helper fns
 
@@ -39,12 +39,14 @@
 
 
 (reg-fx
- ::jail-command-data-request
- (fn [{:keys [message data-type] :as jail-call-params}]
-   (status/call-jail (-> jail-call-params
-                         (dissoc :message :data-type)
-                         (assoc :callback
-                                #(dispatch [::jail-command-data-response % message data-type]))))))
+ :chat-events/call-jail
+ (fn [{:keys [call-params callback-events-creator]}]
+   (status/call-jail
+    (-> jail-call-params
+        (assoc :callback
+               (fn [jail-response]
+                 (doseq [event (callback-events-creator jail-response)]
+                   (dispatch event))))))))
 
 ;;;; Handlers
 
@@ -82,11 +84,12 @@
              to       (get-in contacts [chat-id :address])
              params   {:parameters params
                        :context (generate-context db chat-id to)}]
-         {::jail-command-data-request {:jail-id jail-id
-                                       :path path
-                                       :params params
-                                       :message message
-                                       :data-type data-type}})
+         {:chat-events/call-jail {:call-params {:jail-id jail-id
+                                                :path path
+                                                :params params}
+                                  :callback-events-creator (fn [jail-response]
+                                                             [[::jail-command-data-response
+                                                               jail-response message data-type]])}})
        {:dispatch-n [[:add-commands-loading-callback jail-id
                       #(dispatch [:request-command-data message data-type])]
                      [:load-commands! jail-id]]}))))
