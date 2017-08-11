@@ -15,7 +15,7 @@
             [status-im.utils.platform :refer [platform-specific]]
             [status-im.i18n :refer [label]]
             [status-im.discover.styles :as st]
-            [status-im.contacts.styles :as contacts-st]))
+            [status-im.ui.screens.contacts.styles :as contacts-st]))
 
 (defn render-separator [_ row-id _]
   (list-item [view {:style st/row-separator

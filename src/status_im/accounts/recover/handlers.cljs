@@ -8,7 +8,7 @@
             [status-im.utils.handlers :as u]
             [status-im.utils.gfycat.core :refer [generate-gfy]]
             [status-im.protocol.core :as protocol]
-            [status-im.navigation.handlers :as nav]))
+            [status-im.ui.screens.navigation :as nav]))
 
 (defn account-recovered [result]
   (let [data       (json->clj result)

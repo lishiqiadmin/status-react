@@ -1,7 +1,7 @@
 (ns status-im.qr-scanner.handlers
   (:require [re-frame.core :refer [after dispatch debug enrich]]
             [status-im.components.camera :as camera]
-            [status-im.navigation.handlers :as nav]
+            [status-im.ui.screens.navigation :as nav]
             [status-im.utils.handlers :as u :refer [register-handler]]
             [status-im.utils.utils :as utils]
             [status-im.i18n :as i18n]))

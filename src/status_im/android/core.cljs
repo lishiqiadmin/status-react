@@ -1,11 +1,11 @@
 (ns status-im.android.core
   (:require [reagent.core :as reagent]
             [re-frame.core :refer [subscribe dispatch dispatch-sync]]
-            status-im.db
-            status-im.events
-            status-im.subs
+            status-im.ui.screens.db
+            status-im.ui.screens.events
+            status-im.ui.screens.subs
             status-im.data-store.core
-            [status-im.views :as views]
+            [status-im.ui.screens.views :as views]
             [status-im.components.react :as react]
             [status-im.components.status :as status]
             [status-im.utils.utils :as utils]))

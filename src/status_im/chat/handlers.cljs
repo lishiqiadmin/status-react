@@ -19,7 +19,7 @@
                                          wallet-chat-id]]
             [status-im.utils.random :as random]
             [status-im.chat.sign-up :as sign-up-service]
-            [status-im.navigation.handlers :as nav]
+            [status-im.ui.screens.navigation :as nav]
             [status-im.utils.handlers :refer [register-handler register-handler-fx] :as u]
             [status-im.handlers.server :as server]
             [status-im.utils.phone-number :refer [format-phone-number

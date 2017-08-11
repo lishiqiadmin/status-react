@@ -3,11 +3,11 @@
             reagent.core
             [re-frame.core :as rf]
             [day8.re-frame.test :refer-macros [run-test-sync]]
-            status-im.db
-            [status-im.contacts.events :as contacts-events]
-            [status-im.group.events :as group-events]
-            status-im.subs
-            [status-im.events :as events]
+            status-im.ui.screens.db
+            [status-im.ui.screens.contacts.events :as contacts-events]
+            [status-im.ui.screens.group.events :as group-events]
+            status-im.ui.screens.subs
+            [status-im.ui.screens.events :as events]
             [status-im.utils.js-resources :as js-res]
             [status-im.utils.datetime :as datetime]))
 

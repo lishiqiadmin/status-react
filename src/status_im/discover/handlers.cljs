@@ -3,7 +3,7 @@
             [status-im.utils.utils :refer [first-index]]
             [status-im.utils.handlers :refer [register-handler get-hashtags]]
             [status-im.protocol.core :as protocol]
-            [status-im.navigation.handlers :as nav]
+            [status-im.ui.screens.navigation :as nav]
             [status-im.data-store.discover :as discoveries]
             [status-im.utils.handlers :as u]
             [status-im.utils.datetime :as time]

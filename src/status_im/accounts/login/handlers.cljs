@@ -6,7 +6,7 @@
             [status-im.data-store.core :as data-store]
             [status-im.components.status :as status]
             [status-im.constants :refer [console-chat-id]]
-            [status-im.navigation.handlers :as nav]))
+            [status-im.ui.screens.navigation :as nav]))
 
 (defmethod nav/preload-data! :login
   [db]

@@ -17,7 +17,7 @@
     [status-im.utils.platform :refer [platform-specific]]
     [status-im.i18n :refer [label]]
     [status-im.discover.styles :as st]
-    [status-im.contacts.styles :as contacts-st]))
+    [status-im.ui.screens.contacts.styles :as contacts-st]))
 
 (defn get-hashtags [status]
   (let [hashtags (map #(str/lower-case (str/replace % #"#" "")) (re-seq #"[^ !?,;:.]+" status))]

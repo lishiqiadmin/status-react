@@ -9,7 +9,7 @@
             [status-im.utils.identicon :refer [identicon]]
             [status-im.utils.random :as random]
             [status-im.i18n :refer [label]]
-            [status-im.constants :refer [content-type-command-request]]
+            [status-im.constants :refer [content-type-command-request console-chat-id]]
             status-im.accounts.login.handlers
             status-im.accounts.recover.handlers
             [clojure.string :as str]
@@ -17,10 +17,9 @@
             [status-im.utils.handlers :as u :refer [get-hashtags]]
             [status-im.accounts.statuses :as statuses]
             [status-im.utils.gfycat.core :refer [generate-gfy]]
-            [status-im.constants :refer [console-chat-id]]
             [status-im.utils.scheduler :as s]
             [status-im.protocol.message-cache :as cache]
-            [status-im.navigation.handlers :as nav]))
+            [status-im.ui.screens.navigation :as nav]))
 
 (defn save-account
   [{:keys [network]} [_ account]]
