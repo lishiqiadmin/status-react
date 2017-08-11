@@ -3,15 +3,15 @@
   (:require [status-im.constants :refer [console-chat-id]]
             [status-im.utils.platform :as platform]
             [cljs.spec.alpha :as spec]
-            [status-im.accounts.specs]
-            [status-im.ui.screens.contacts.db]
-            [status-im.qr-scanner.specs]
-            [status-im.ui.screens.group.db]
-            [status-im.chat.specs]
-            [status-im.chat.new-public-chat.db]
-            [status-im.profile.specs]
-            [status-im.transactions.specs]
-            [status-im.discover.specs]))
+            status-im.ui.screens.accounts.db
+            status-im.ui.screens.contacts.db
+            status-im.ui.screens.qr-scanner.db
+            status-im.ui.screens.group.db
+            status-im.chat.specs
+            status-im.chat.new-public-chat.db
+            status-im.profile.specs
+            status-im.transactions.specs
+            status-im.ui.screens.discover.db))
 
 ;; initial state of app-db
 (def app-db {:current-public-key         ""

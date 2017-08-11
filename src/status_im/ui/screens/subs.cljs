@@ -1,9 +1,9 @@
 (ns status-im.ui.screens.subs
   (:require [re-frame.core :refer [reg-sub subscribe]]
             status-im.chat.subs
-            status-im.chats-list.subs
+            status-im.ui.screens.chats-list.subs
             status-im.ui.screens.group.chat-settings.subs
-            status-im.discover.subs
+            status-im.ui.screens.discover.subs
             status-im.ui.screens.contacts.subs
             status-im.ui.screens.group.subs
             status-im.transactions.subs

@@ -7,22 +7,21 @@
             [status-im.components.main-tabs :refer [main-tabs]]
             [status-im.components.context-menu :refer [menu-context]]
 
-            [status-im.accounts.login.screen :refer [login]]
-            [status-im.accounts.recover.screen :refer [recover]]
-            [status-im.accounts.screen :refer [accounts]]
+            [status-im.ui.screens.accounts.login.views :refer [login]]
+            [status-im.ui.screens.accounts.recover.views :refer [recover]]
+            [status-im.ui.screens.accounts.views :refer [accounts]]
 
             [status-im.chat.screen :refer [chat]]
             [status-im.chat.new-chat.view :refer [new-chat]]
             [status-im.chat.new-public-chat.view :refer [new-public-chat]]
-            [status-im.chats-list.screen :refer [chats-list]]
 
             [status-im.ui.screens.contacts.contact-list.views :refer [contact-list]]
             [status-im.ui.screens.contacts.contact-list-modal.views :refer [contact-list-modal]]
             [status-im.ui.screens.contacts.new-contact.views :refer [new-contact]]
 
-            [status-im.discover.search-results :refer [discover-search-results]]
+            [status-im.ui.screens.discover.views.search-results :refer [discover-search-results]]
 
-            [status-im.qr-scanner.screen :refer [qr-scanner]]
+            [status-im.ui.screens.qr-scanner.views :refer [qr-scanner]]
 
             [status-im.transactions.screens.confirmation-success :refer [confirmation-success]]
             [status-im.transactions.screens.unsigned-transactions :refer [unsigned-transactions]]

@@ -4,13 +4,13 @@
     status-im.ui.screens.group.chat-settings.events
     status-im.ui.screens.navigation
     status-im.ui.screens.contacts.events
-    status-im.discover.handlers
+    status-im.ui.screens.discover.events
     status-im.ui.screens.group.events
     status-im.profile.handlers
     status-im.commands.handlers.loading
     status-im.commands.handlers.jail
-    status-im.qr-scanner.handlers
-    status-im.accounts.handlers
+    status-im.ui.screens.qr-scanner.events
+    status-im.ui.screens.accounts.events
     status-im.protocol.handlers
     status-im.transactions.handlers
     status-im.network.handlers
