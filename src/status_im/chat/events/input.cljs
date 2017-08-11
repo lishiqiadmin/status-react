@@ -128,7 +128,8 @@
 
 (register-handler-db
  :set-chat-input-metadata
- (fn [{:keys [current-chat-id] :as db} [_ data chat-id]]
+ [trim-v]
+ (fn [{:keys [current-chat-id] :as db} [data chat-id]]
    (let [chat-id (or chat-id current-chat-id)]
      (assoc-in db [:chats chat-id :input-metadata] data))))
 
