@@ -13,9 +13,16 @@
             [status-im.components.context-menu :refer [context-menu]]
             [status-im.components.toolbar-new.actions :as act]
             [status-im.components.toolbar-new.styles :as st]
-            [status-im.accessibility-ids :as id]
             [status-im.utils.platform :refer [platform-specific]]
             [reagent.core :as r]))
+
+(defn create-nav-button [nav-action]
+  [touchable-highlight (merge {:style    st/toolbar-button
+                               :on-press (:handler nav-action)}
+                              (when-let [l (:accessibility-label nav-action)]
+                                {:accessibility-label l}))
+   [view
+    [image (:image nav-action)]]])
 
 (defn toolbar [{title                :title
                 nav-action           :nav-action
@@ -31,19 +38,9 @@
   (let [style (merge (st/toolbar-wrapper background-color) style)]
     [view {:style style}
      [view st/toolbar
-      [view (st/toolbar-nav-actions-container actions)
-       (when-not hide-nav?
-         (if nav-action
-           [touchable-highlight {:style    st/toolbar-button
-                                 :on-press (:handler nav-action)}
-            [view
-             [image (:image nav-action)]]]
-           [touchable-highlight {:style               st/toolbar-button
-                                 :on-press            #(dispatch [:navigate-back])
-                                 :accessibility-label id/toolbar-back-button}
-            [view
-             [image {:source {:uri :icon_back_dark}
-                     :style  icon-default}]]]))]
+      (when-not hide-nav?
+        [view (st/toolbar-nav-actions-container actions)
+         (create-nav-button (or nav-action act/default-back))])
       (or custom-content
           [view {:style st/toolbar-title-container}
            [text {:style (merge st/toolbar-title-text title-style)
@@ -122,7 +119,7 @@
                              [(act/close #(do
                                             (.clear @search-text-input)
                                             (dispatch [:set-in [:toolbar-search :text] ""])))]
-                             [(act/search-icon)])
+                             [act/search-icon])
                            (into [(act/search #(toggle-search-fn search-key))] actions))]
     [toolbar {:style          style
               :nav-action     (if show-search?

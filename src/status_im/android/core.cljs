@@ -49,6 +49,7 @@
             [status-im.components.styles :as st]
             [status-im.chat.styles.screen :as chat-st]
             [status-im.profile.qr-code.screen :refer [qr-code-view]]
+            [status-im.ui.screens.wallet.transactions.views :refer [wallet-transactions]]
             [status-im.utils.utils :as utils]))
 
 (defn init-back-button-handler! []
@@ -168,7 +169,8 @@
                                        :unsigned-transactions unsigned-transactions
                                        :transaction-details transaction-details
                                        :confirmation-success confirmation-success
-                                       :contact-list-modal contact-list-modal)]
+                                       :contact-list-modal contact-list-modal
+                                       :wallet-transactions wallet-transactions)]
                        [component])]])]]))))})))
 
 (defn init []

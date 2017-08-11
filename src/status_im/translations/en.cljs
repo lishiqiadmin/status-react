@@ -322,4 +322,7 @@
    :contract-creation                     "Contract Creation"
 
    ;:webview
-   :web-view-error                        "oops, error"})
+   :web-view-error                        "oops, error"
+
+   ;; wallet
+   :transactions-sign-all "Sign all"})
