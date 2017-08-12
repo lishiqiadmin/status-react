@@ -240,18 +240,19 @@
  [trim-v]
  (fn [{{:keys [current-public-key current-account-id] :as db} :db} [command chat-id]]
    (let [text (get-in db [:chats chat-id :input-text])
-         data {:message  text
-               :command  command
-               :chat-id  chat-id
-               :identity current-public-key
-               :address  current-account-id}]
-     (cond-> {:dispatch-n [[:set-chat-input-text nil chat-id]
-                           [:set-chat-input-metadata nil chat-id]
-                           [:set-chat-ui-props {:sending-in-progress? false}]]}
-       command
-       (update :dispatch-n conj [:check-commands-handlers! data])
-       (not (str/blank? text))
-       (update :dispatch-n conj [:prepare-message data])))))
+         data   {:message  text
+                 :command  command
+                 :chat-id  chat-id
+                 :identity current-public-key
+                 :address  current-account-id}
+         events [[:set-chat-input-text nil chat-id]
+                 [:set-chat-input-metadata nil chat-id]
+                 [:set-chat-ui-props {:sending-in-progress? false}]]]
+     {:dispatch-n (if command
+                    (conj events [:check-commands-handlers! data])
+                    (if (str/blank? text)
+                      events
+                      (conj events [:prepare-message data])))})))
 
 (register-handler-fx
  :proceed-command
@@ -297,9 +298,9 @@
  ::execute-validation-handler
  [trim-v]
  (fn [_ [validation-handler-name params error-events-creator proceed-events]]
-   {:dispatch-n (if-let [validator (input-model/validation-handler validation-handler-name)]
-                  (validator params error-events-creator)
-                  proceed-events)}))
+   (let [error-events (when-let [validator (input-model/validation-handler validation-handler-name)]
+                        (validator params error-events-creator))]
+     {:dispatch-n (or error-events proceed-events)})))
 
 (register-handler-fx
  ::send-command
