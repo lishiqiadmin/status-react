@@ -16,9 +16,9 @@
 ;;;; Coeffects
 
 (reg-cofx
- :current-time
+ :now
  (fn [coeffects _]
-   (assoc coeffects :current-time (time/now-ms))))
+   (assoc coeffects :now (time/now-ms))))
 
 (reg-cofx
  :random-id
@@ -322,10 +322,10 @@
 
 (register-handler-fx
  ::request-command-data
- [trim-v (inject-cofx :random-id) (inject-cofx :current-time)]
+ [trim-v (inject-cofx :random-id) (inject-cofx :now)]
  (fn [{{:keys [bot-db] :contacts/keys [contacts]} :db
        message-id :random-id
-       current-time :current-time}
+       current-time :now}
       [{{:keys [command
                 metadata
                 args]
