@@ -262,16 +262,16 @@
                                    :chat-id chat-id
                                    :jail-id (or bot chat-id)}
          on-send-params           (merge params
-                                         {:data-type   :on-send
-                                          :event-after (fn [_ jail-response]
-                                                         [::send-command jail-response content chat-id])})
+                                         {:data-type           :on-send
+                                          :event-after-creator (fn [_ jail-response]
+                                                                 [::send-command jail-response content chat-id])})
          after-validation-events  [[::request-command-data on-send-params]]
          validation-params        (merge params
-                                         {:data-type   :validator
-                                          :event-after (fn [_ jail-response]
-                                                         [::proceed-validation
-                                                          jail-response
-                                                          after-validation-events])})]
+                                         {:data-type           :validator
+                                          :event-after-creator (fn [_ jail-response]
+                                                                 [::proceed-validation
+                                                                  jail-response
+                                                                  after-validation-events])})]
      {:dispatch [::request-command-data validation-params]})))
 
 (register-handler-fx
@@ -313,12 +313,12 @@
                     (conj [:choose-predefined-expandable-height :result-box :max]))
       ::dismiss-keyboard nil}
      {:dispatch [::request-command-data
-                 {:content         content
-                  :chat-id         chat-id
-                  :jail-id         (or bot chat-id)
-                  :data-type       :preview
-                  :event-after     (fn [command-message _]
-                                     [::send-message command-message chat-id])}]})))
+                 {:content             content
+                  :chat-id             chat-id
+                  :jail-id             (or bot chat-id)
+                  :data-type           :preview
+                  :event-after-creator (fn [command-message _]
+                                         [::send-message command-message chat-id])}]})))
 
 (register-handler-fx
  ::request-command-data
@@ -330,7 +330,7 @@
                 metadata
                 args]
          :as   content} :content
-        :keys  [chat-id jail-id data-type event-after]}]]
+        :keys  [chat-id jail-id data-type event-after-creator]}]]
    (let [{:keys [dapp? dapp-url name]} (get contacts chat-id)
          metadata        (merge metadata
                                 (when dapp?
@@ -357,12 +357,11 @@
                                          :params  params
                                          :type    (:type command)}
                           :on-requested (fn [jail-response]
-                                          (event-after command-message jail-response))}]
+                                          (event-after-creator command-message jail-response))}]
      {:dispatch [:request-command-data request-data data-type]})))
 
 (register-handler-fx
  :send-current-message
- [trim-v]
  (fn [{{:keys [current-chat-id] :as db} :db} _]
    (let [chat-command (input-model/selected-chat-command db current-chat-id)
          seq-command? (get-in chat-command [:command :sequential-params])
@@ -404,7 +403,7 @@
          (assoc-in [:chats chat-id :seq-argument-input-text] nil)))))
 
 (register-handler-db
- :update-seq-arguments
+ ::update-seq-arguments
  [trim-v]
  (fn [{:keys [current-chat-id chats] :as db} [chat-id]]
    (let [chat-id (or chat-id current-chat-id)
@@ -424,15 +423,15 @@
                               (assoc :args (into [] (conj seq-arguments text))))
          args             (get-in chats [chat-id :seq-arguments])]
      {:dispatch [::request-command-data
-                 {:content     command
-                  :chat-id     chat-id
-                  :jail-id     (or (get-in command [:command :bot]) chat-id)
-                  :data-type   :validator
-                  :event-after (fn [_ jail-response]
-                                 [::proceed-validation
-                                  jail-response
-                                  [[:update-seq-arguments chat-id]
-                                   [:send-current-message]]])}]})))
+                 {:content             command
+                  :chat-id             chat-id
+                  :jail-id             (or (get-in command [:command :bot]) chat-id)
+                  :data-type           :validator
+                  :event-after-creator (fn [_ jail-response]
+                                         [::proceed-validation
+                                          jail-response
+                                          [[::update-seq-arguments chat-id]
+                                           [:send-current-message]]])}]})))
 
 (register-handler-db
  :set-chat-seq-arg-input-text
