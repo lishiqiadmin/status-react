@@ -418,10 +418,9 @@
  (fn [{{:keys [current-chat-id chats] :as db} :db} [chat-id]]
    (let [chat-id          (or chat-id current-chat-id)
          text             (get-in chats [chat-id :seq-argument-input-text])
-         seq-arguments    (get-in db [:chats chat-id :seq-arguments])
+         seq-arguments    (get-in chats [chat-id :seq-arguments])
          command          (-> (input-model/selected-chat-command db chat-id)
-                              (assoc :args (into [] (conj seq-arguments text))))
-         args             (get-in chats [chat-id :seq-arguments])]
+                              (assoc :args (into [] (conj seq-arguments text))))]
      {:dispatch [::request-command-data
                  {:content             command
                   :chat-id             chat-id
