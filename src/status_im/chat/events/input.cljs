@@ -363,24 +363,23 @@
 (register-handler-fx
  :send-current-message
  [trim-v]
- (fn [{{:keys [current-chat-id] :as db} :db} [chat-id]]
-   (let [chat-id      (or chat-id current-chat-id)
-         chat-command (input-model/selected-chat-command db chat-id)
+ (fn [{{:keys [current-chat-id] :as db} :db} _]
+   (let [chat-command (input-model/selected-chat-command db current-chat-id)
          seq-command? (get-in chat-command [:command :sequential-params])
          chat-command (if seq-command?
-                        (let [args (get-in db [:chats chat-id :seq-arguments])]
+                        (let [args (get-in db [:chats current-chat-id :seq-arguments])]
                           (assoc chat-command :args args))
                         (update chat-command :args #(remove str/blank? %)))
          set-chat-ui-props-event [:set-chat-ui-props {:sending-in-progress? true}]
          additional-events (if (:command chat-command)
                              (if (= :complete (input-model/command-completion chat-command))
-                               [[:proceed-command chat-command chat-id]
-                                [:clear-seq-arguments chat-id]]
-                               (let [text (get-in db [:chats chat-id :input-text])]
+                               [[:proceed-command chat-command current-chat-id]
+                                [:clear-seq-arguments current-chat-id]]
+                               (let [text (get-in db [:chats current-chat-id :input-text])]
                                  [[:set-chat-ui-props {:sending-in-progress? false}]
                                   (when-not (input-model/text-ends-with-space? text)
                                     [:set-chat-input-text (str text const/spacing-char)])]))
-                             [[::send-message nil chat-id]])]
+                             [[::send-message nil current-chat-id]])]
      {:dispatch-n (into [set-chat-ui-props-event]
                         (remove nil? additional-events))})))
 
